@@ -6,9 +6,17 @@
 
 # Usage
 
-1. Put your videos in the 'videos' directory
-2. Run:
+```
+git clone git@github.com:rboonzaijer/extract-dashcam-video-gps-to-gpx-Innovv-K3-2CH.git video-extract-gps
+
+cd video-extract-gps
+```
+
+- Put your videos in the 'videos' directory, and run the python(3) script
 
 ```
 python extract.py
 ```
+
+# Credits
+Sergei Franco ( https://sergei.nz/?s=nvtk_mp42gpx.py )
