@@ -6,11 +6,12 @@ from typing import Optional
 import datetime
 import multiprocessing
 from collections import defaultdict
-from pathlib import Path
+import sys
+import getopt
 
-def getVideos():
+def getVideos(dir):
 	files = []
-	for dirpath, dirnames, filenames in os.walk("videos"):
+	for dirpath, dirnames, filenames in os.walk(dir):
 		for filename in [f for f in filenames if not f.endswith('.gpx') and not f.endswith('.gitkeep') and not f.lower().endswith('_r.ts')]:
 			path = os.path.join(dirpath, filename)
 			pathWithoutExtension = os.path.splitext(path)[0]
@@ -22,12 +23,11 @@ def getVideos():
 	return files
 
 def process(video):
-	#print(video)
 	os.system('python lib/nvtk_mp42gpx.py -e -i "' + video['path'] + '" -o "' + video['pathWithoutExtension'] + '.gpx"')
 
-def getGpxFiles():
+def getGpxFiles(dir):
 	files = []
-	for dirpath, dirnames, filenames in os.walk("videos"):
+	for dirpath, dirnames, filenames in os.walk(dir):
 		for filename in [f for f in filenames if f.endswith('.gpx') and not f.endswith(' DIR.gpx')]:
 			path = os.path.join(dirpath, filename)
 			pathWithoutExtension = os.path.splitext(path)[0]
@@ -46,9 +46,9 @@ def get_time(g: gpx.GPX) -> Optional[datetime.datetime]:
                     return pt.time
     return None
 
-def merge_gpx():
+def merge_gpx(dir):
 	start_time = time.time()
-	files = getGpxFiles()
+	files = getGpxFiles(dir)
 	groups = defaultdict(list)
 	for obj in files:
 		groups[obj['dir']].append(obj)
@@ -82,9 +82,9 @@ def merge_gpx():
 				f.write(base_gpx.to_xml())
 	print("Merged GPX in %s seconds" % (round(time.time() - start_time, 1)))
 
-def extract_gpx():
+def extract_gpx(dir):
 	start_time = time.time()
-	videos = getVideos()
+	videos = getVideos(dir)
 	pool = multiprocessing.Pool()
 	processed_amount = 0
 	for video in videos:
@@ -95,9 +95,13 @@ def extract_gpx():
 	pool.join()
 	print("Extracted GPX for %d videos (of %d total videos) in %s seconds" % (processed_amount, len(videos), round(time.time() - start_time, 1)))
 
-def main():
-	extract_gpx()
-	merge_gpx()
+def main(arg):
+	dir = 'videos'
+	if len(arg) > 0:
+		dir = arg[0]
+	print(dir)
+	extract_gpx(dir)
+	merge_gpx(dir)
 
 if __name__ == "__main__":
-	main()
+	main(sys.argv[1:])

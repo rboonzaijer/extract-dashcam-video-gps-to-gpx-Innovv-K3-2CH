@@ -20,5 +20,10 @@ cd video-extract-gps
 python extract.py
 ```
 
+or define your custom video path:
+```
+python extract.py "../my-custom-path/videos"
+```
+
 # Credits
 Sergei Franco ( https://sergei.nz/?s=nvtk_mp42gpx.py )
