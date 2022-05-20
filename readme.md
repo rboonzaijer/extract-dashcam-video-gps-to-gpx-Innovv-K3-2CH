@@ -2,7 +2,9 @@
 
 - Looks for any files in the 'videos' directory (recursively)
 - A '.gpx' file will be created next to the file, when it already exists it will be skipped
+- It does not extract GPS data from the rear cameras (files ending with _R.TS)
 - Finally all loose '.gpx' files in a folder will be merged to one file (for the whole route)
+- Upload your GPX into Google Maps (or here: https://www.gpsvisualizer.com/ ) to see your route
 
 # Usage
 
